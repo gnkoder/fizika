@@ -1,44 +1,328 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>F1 Brake Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>F1 Калькулятор торможения | Карбоновые тормоза</title>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; padding: 20px; }
-        .calc-card { background: #2d2d2d; padding: 20px; border-radius: 10px; max-width: 400px; border-left: 5px solid #e10600; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
-        .result { margin-top: 20px; padding: 10px; background: #3d3d3d; border-radius: 5px; }
-        b { color: #e10600; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Inter', system-ui, sans-serif;
+            background: radial-gradient(circle at 10% 20%, #0b0b0f, #0f0f13);
+            color: #f2f2f2;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .f1-card {
+            max-width: 540px;
+            width: 100%;
+            background: rgba(20, 20, 26, 0.94);
+            backdrop-filter: blur(2px);
+            border-radius: 44px;
+            padding: 28px 26px 32px 26px;
+            box-shadow: 0 30px 40px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(225, 6, 0, 0.35);
+            border-left: 6px solid #e10600;
+            transition: all 0.2s;
+        }
+
+        .f1-card:hover {
+            border-left-width: 8px;
+            box-shadow: 0 35px 50px -18px black;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(130deg, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        h1 small {
+            font-size: 0.7rem;
+            background: #2a2a32;
+            padding: 4px 12px;
+            border-radius: 60px;
+            color: #ff9f7c;
+            letter-spacing: 0;
+            font-weight: 500;
+        }
+
+        .subhead {
+            font-size: 0.85rem;
+            color: #aaa;
+            border-left: 3px solid #e10600;
+            padding-left: 12px;
+            margin: 12px 0 24px 0;
+            font-weight: 400;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #ddd;
+        }
+
+        .input-group label::before {
+            content: "🏎️";
+            font-size: 1.2rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1.35rem;
+            font-weight: 600;
+            background: #1e1e26;
+            border: none;
+            border-radius: 60px;
+            color: white;
+            outline: none;
+            transition: 0.2s;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+            box-shadow: inset 0 1px 3px #00000055, 0 1px 1px #3f3f4a;
+        }
+
+        input:focus {
+            background: #292935;
+            box-shadow: 0 0 0 3px rgba(225, 6, 0, 0.4), inset 0 1px 3px #00000066;
+        }
+
+        .result-panel {
+            background: #17171f;
+            border-radius: 36px;
+            padding: 20px 22px;
+            margin: 18px 0 12px 0;
+            border: 1px solid #2c2c38;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px dashed #2b2b35;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #bcbcd0;
+        }
+
+        .result-value {
+            font-weight: 800;
+            font-size: 1.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            background: #0c0c12;
+            padding: 5px 18px;
+            border-radius: 60px;
+            color: #e10600;
+            letter-spacing: 0.5px;
+            box-shadow: inset 0 1px 1px #00000033, 0 1px 0 #3a3a44;
+        }
+
+        .tech-note {
+            margin-top: 16px;
+            font-size: 0.72rem;
+            text-align: center;
+            color: #9797a5;
+            background: #12121a;
+            padding: 10px 15px;
+            border-radius: 28px;
+        }
+
+        .temp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #2c1e1a;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #ff8855;
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 18px;
+            opacity: 0.7;
+            border-top: 1px solid #2a2a32;
+            padding-top: 14px;
+        }
+
+        .inline-math {
+            font-family: monospace;
+            background: #1a1a22;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
     </style>
 </head>
 <body>
-    <div class="calc-card">
-        <h2>Калькулятор торможения F1</h2>
-        <label>Скорость болида (км/ч):</label>
-        <input type="number" id="speed" value="300" oninput="calculate()">
-        
-        <div class="result" id="res">
-            </div>
+<div class="f1-card">
+    <h1>
+        🔥 Торможение F1
+    </h1>
+    <div class="input-group">
+        <label>Скорость болида (км/ч) — реальная трассовая</label>
+        <input type="number" id="speedInput" value="295" step="5" placeholder="например: 300 км/ч">
     </div>
 
-    <script>
-        function calculate() {
-            let v = document.getElementById('speed').value / 3.6; // в м/с
-            let m = 800; [span_8](start_span)// масса болида[span_8](end_span)
-            let mu = 0.6; // коэфф. [span_9](start_span)трения прогретого карбона[span_9](end_span)
-            let g = 9.81;
+    <!-- Блок результатов — только 3 строки, без дублей -->
+    <div class="result-panel" id="resultArea">
+        <div class="result-row">
+            <span class="result-label">⚡ Кинетическая энергия:</span>
+            <span class="result-value" id="energyVal">— МДж</span>
+        </div>
+        <div class="result-row">
+            <span class="result-label">🛑 Тормозной путь:</span>
+            <span class="result-value" id="distanceVal">— м</span>
+        </div>
+        <div class="result-row">
+            <span class="result-label">📊 Перегрузка (G‑сила):</span>
+            <span class="result-value" id="gVal">— G</span>
+        </div>
+    </div>
+</div>
 
-            let ek = (m * v * v) / 2; [span_10](start_span)// Кинетическая энергия[span_10](end_span)
-            let dist = (v * v) / (2 * mu * g); // Тормозной путь
-            let deceler = (mu * g) / g; [span_11](start_span)[span_12](start_span)// Перегрузка в G[span_11](end_span)[span_12](end_span)
+<script>
+    (function() {
+        // --- физические параметры болида F1 (эталонные для карбоновых тормозов)
+        const MASS_KG = 800;            // масса болида с пилотом и топливом (кг)
+        const MU_CARBON = 0.60;         // коэффициент трения карбон-карбон (прогретые диски >350°C)
+        const G_CONST = 9.81;           // ускорение свободного падения (м/с²)
+        
+        // DOM элементы
+        const speedInput = document.getElementById('speedInput');
+        const energySpan = document.getElementById('energyVal');
+        const distanceSpan = document.getElementById('distanceVal');
+        const gSpan = document.getElementById('gVal');
 
-            document.getElementById('res').innerHTML = 
-                <p>Кинетическая энергия: <b>${(ek / 1000000).toFixed(2)} МДж</b></p>
-                <p>Тормозной путь: <b>${dist.toFixed(1)} м</b></p>
-                <p>Перегрузка: <b>${mu.toFixed(1)} G</b></p>
-                <p style="font-size: 0.8em; color: #aaa;">*Расчет для карбоновых дисков при темп. >[span_13](start_span)350°C[span_13](end_span)</p>
-            ;
+        // форматирование чисел для отображения
+        function formatNumber(value, decimals = 1) {
+            if (isNaN(value)) return '0';
+            return value.toLocaleString('ru-RU', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
         }
-        calculate();
-    </script>
+
+        // расчёт физических параметров торможения
+        function computeBrakeParams(kmh) {
+            let v_ms = kmh / 3.6;
+            if (v_ms < 0) v_ms = 0;
+            if (kmh < 0) kmh = 0;
+            
+            // 1) Кинетическая энергия (Джоули -> Мегаджоули)
+            const kineticJ = 0.5 * MASS_KG * v_ms * v_ms;
+            const kineticMJ = kineticJ / 1_000_000;
+            
+            // 2) Тормозной путь: d = v² / (2 * μ * g)
+            let brakingDistance = 0;
+            if (MU_CARBON > 0 && G_CONST > 0) {
+                brakingDistance = (v_ms * v_ms) / (2 * MU_CARBON * G_CONST);
+            }
+            if (kmh < 0.01) brakingDistance = 0;
+            
+            // 3) Перегрузка в G (теоретическая, на пределе трения карбона)
+            //    a = μ * g  →  G = μ
+            const gLoad = MU_CARBON;
+            
+            return {
+                energyMJ: kineticMJ,
+                distanceM: brakingDistance,
+                gForce: gLoad,
+                speed: kmh
+            };
+        }
+        
+        // обновление интерфейса (без дублирования)
+        function updateUI() {
+            let rawSpeed = parseFloat(speedInput.value);
+            
+            // валидация и границы (F1 редко превышает 370 км/ч, но оставим до 400 для запаса)
+            if (isNaN(rawSpeed)) {
+                rawSpeed = 0;
+                speedInput.value = 0;
+            }
+            if (rawSpeed < 0) rawSpeed = 0;
+            if (rawSpeed > 400) {
+                rawSpeed = 400;
+                speedInput.value = 400;
+            }
+            rawSpeed = Math.round(rawSpeed * 10) / 10;
+            speedInput.value = rawSpeed;
+            
+            const data = computeBrakeParams(rawSpeed);
+            
+            // --- Кинетическая энергия (МДж) ---
+            let energyText = `${formatNumber(data.energyMJ, 2)} МДж`;
+            if (data.energyMJ > 27) energyText = `🔥 ${energyText}`;
+            else if (data.energyMJ > 14) energyText = `⚡ ${energyText}`;
+            
+            // --- Тормозной путь (метры) ---
+            let distanceText = `${formatNumber(data.distanceM, 1)} м`;
+            if (rawSpeed > 340 && data.distanceM > 170) distanceText = `⚠️ ${distanceText} (экстремально)`;
+            if (rawSpeed > 0 && rawSpeed < 70) distanceText = `${distanceText} · пит-лейн`;
+            
+            // --- Перегрузка G (коэффициент трения 0.60 => 0.60G)---
+            let gText = `${data.gForce.toFixed(2)} G`;
+            if (data.gForce >= 0.59) gText = `🏁 ${gText} (пик карбона)`;
+            
+            // заполняем три строки (без повторов)
+            energySpan.textContent = energyText;
+            distanceSpan.textContent = distanceText;
+            gSpan.textContent = gText;
+        }
+        
+        // события ввода
+        speedInput.addEventListener('input', function() {
+            updateUI();
+        });
+        
+        speedInput.addEventListener('blur', function() {
+            let val = parseFloat(speedInput.value);
+            if (isNaN(val)) val = 0;
+            val = Math.min(400, Math.max(0, val));
+            speedInput.value = Math.round(val * 10) / 10;
+            updateUI();
+        });
+        
+        // инициализация при загрузке
+        updateUI();
+    })();
+</script>
 </body>
 </html>
