@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>F1 Brake Calculator</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; padding: 20px; }
+        .calc-card { background: #2d2d2d; padding: 20px; border-radius: 10px; max-width: 400px; border-left: 5px solid #e10600; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+        .result { margin-top: 20px; padding: 10px; background: #3d3d3d; border-radius: 5px; }
+        b { color: #e10600; }
+    </style>
+</head>
+<body>
+    <div class="calc-card">
+        <h2>Калькулятор торможения F1</h2>
+        <label>Скорость болида (км/ч):</label>
+        <input type="number" id="speed" value="300" oninput="calculate()">
+        
+        <div class="result" id="res">
+            </div>
+    </div>
+
+    <script>
+        function calculate() {
+            let v = document.getElementById('speed').value / 3.6; // в м/с
+            let m = 800; [span_8](start_span)// масса болида[span_8](end_span)
+            let mu = 0.6; // коэфф. [span_9](start_span)трения прогретого карбона[span_9](end_span)
+            let g = 9.81;
+
+            let ek = (m * v * v) / 2; [span_10](start_span)// Кинетическая энергия[span_10](end_span)
+            let dist = (v * v) / (2 * mu * g); // Тормозной путь
+            let deceler = (mu * g) / g; [span_11](start_span)[span_12](start_span)// Перегрузка в G[span_11](end_span)[span_12](end_span)
+
+            document.getElementById('res').innerHTML = 
+                <p>Кинетическая энергия: <b>${(ek / 1000000).toFixed(2)} МДж</b></p>
+                <p>Тормозной путь: <b>${dist.toFixed(1)} м</b></p>
+                <p>Перегрузка: <b>${mu.toFixed(1)} G</b></p>
+                <p style="font-size: 0.8em; color: #aaa;">*Расчет для карбоновых дисков при темп. >[span_13](start_span)350°C[span_13](end_span)</p>
+            ;
+        }
+        calculate();
+    </script>
+</body>
+</html>
